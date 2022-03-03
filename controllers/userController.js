@@ -32,11 +32,12 @@ const updateUser = async (req, res) => {
     throw new BadRequestError('Please provide all values');
   }
 
-  const user = await User.findOneAndUpdate(
-    { _id: req.user.userId },
-    { name, email },
-    { new: true, runValidators: true }
-  );
+  const user = await User.findOne({ _id: req.user.userId });
+
+  user.name = name;
+  user.email = email;
+
+  await user.save();
 
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, tokenUser });
@@ -67,3 +68,21 @@ module.exports = {
   updateUser,
   updateUserPassword,
 };
+
+// const updateUser = async (req, res) => {
+//   const { name, email } = req.body;
+
+//   if (!name || !email) {
+//     throw new BadRequestError('Please provide all values');
+//   }
+
+//   const user = await User.findOneAndUpdate(
+//     { _id: req.user.userId },
+//     { name, email },
+//     { new: true, runValidators: true }
+//   );
+
+//   const tokenUser = createTokenUser(user);
+//   attachCookiesToResponse({ res, tokenUser });
+//   res.status(StatusCodes.OK).json({ user: tokenUser });
+// };
