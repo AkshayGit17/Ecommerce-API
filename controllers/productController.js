@@ -5,7 +5,7 @@ const { NotFoundError, BadRequestError } = require('../errors');
 const { STATUS_CODES } = require('http');
 
 const getAllProducts = async (req, res) => {
-  const products = await Product.find({});
+  const products = await Product.find({}).populate('reviews');
   res.status(StatusCodes.OK).json({ products, count: products.length });
 };
 const createProduct = async (req, res) => {
